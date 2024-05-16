@@ -1,25 +1,27 @@
-import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
-import { type Page, type Browser, expect } from '@playwright/test';
+import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { fixture } from '../../hooks/pageFixture';
 
-let browser: Browser;
-let page: Page;
+setDefaultTimeout(60 * 1_000 * 2);
 
-setDefaultTimeout(60 * 1000 * 2);
-
-Given('user search for a {string}', async function (book) {
-  await page.locator("input[type='search']").fill(book);
-  await page.waitForTimeout(2000);
-  await page.locator("mat-option[role='option'] span").click();
+Given('User search for a {string}', async function (book) {
+  await fixture.page.locator('input[type="search"]').fill(book);
+  await fixture.page.waitForTimeout(2000);
+  await fixture.page.locator('mat-option .mdc-list-item__primary-text').click();
 });
 
-When('user add the book to the cart', async function () {
-  await page.locator("//button[@color='primary']").click();
-  const toast = page.locator("simple-snack-bar");
-  await expect(toast).toBeVisible();
-  await toast.waitFor({ state: "hidden" })
+When('User add the book to the cart', async function () {
+  const responsePromise = fixture.page.waitForResponse('https://bookcart.azurewebsites.net/**');
+
+  await fixture.page.getByRole('button', { name: 'Add to Cart' }).click();
+  const toast = fixture.page.locator('simple-snack-bar');
+  await expect(toast).toBeVisible({ timeout: 3_000 });
+  await expect(toast).not.toBeVisible({ timeout: 3_000 });
+
+  await responsePromise;
 });
 
-Then('the cart badge should get updated', async function () {
-  const badgeCount = await page.locator("#mat-badge-content-0").textContent();
+Then('The cart badge should get updated', async function () {
+  const badgeCount = await fixture.page.locator('[id^=mat-badge-content]').last().innerText();
   expect(Number(badgeCount)).toBeGreaterThan(0);
 });

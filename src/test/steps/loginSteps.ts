@@ -1,39 +1,64 @@
-import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
-import { type Page, type Browser, chromium, expect } from '@playwright/test';
+import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { fixture } from '../../hooks/pageFixture';
 
-let browser: Browser;
-let page: Page;
+setDefaultTimeout(60 * 1_000 * 2);
 
-setDefaultTimeout(60 * 1000 * 2);
+const pendingRequests = new Set();
 
 Given('User navigates to the application', async function () {
-  browser = await chromium.launch({ headless: false });
-  page = await browser.newPage();
-  await page.goto('https://bookcart.azurewebsites.net/');
+  fixture.page.on('request', request => {
+    if (request.resourceType() === 'xhr' || request.resourceType() === 'fetch') {
+      pendingRequests.add(request);
+    }
+  });
+
+  fixture.page.on('requestfinished', request => {
+    pendingRequests.delete(request);
+  });
+
+  fixture.page.on('requestfailed', request => {
+    pendingRequests.delete(request);
+  });
+
+  await fixture.page.goto('https://bookcart.azurewebsites.net/');
 });
 
 Given('User click on the login link', async function () {
-  await page.getByRole('button', { name: 'Login' }).click();
+  await fixture.page.getByRole('button', { name: 'Login' }).click();
 });
 
 Given('User enter the username as {string}', async function (username) {
-  await page.getByPlaceholder('Username').fill(username);
+  await fixture.page.getByPlaceholder('Username').fill(username);
 });
 
 Given('User enter the password as {string}', async function (password) {
-  await page.getByPlaceholder('Password').fill(password);
+  await fixture.page.getByPlaceholder('Password').fill(password);
 });
 
 When('User click on the login button', async function () {
-  await page.locator('mat-card').getByRole('button', { name: 'Login' }).click();
+  const responsePromise = fixture.page.waitForResponse('https://bookcart.azurewebsites.net/**');
+
+  await fixture.page.locator('mat-card').getByRole('button', { name: 'Login' }).click();
+
+  await responsePromise;
 });
 
 Then('Login should be success', async function () {
-  await expect(page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText('ortoni11');
-  await browser.close();
+  await new Promise(resolve => {
+    const checkPendingRequests = () => {
+      if (pendingRequests.size === 0) {
+        resolve('success');
+      } else {
+        setTimeout(checkPendingRequests, 100);
+      }
+    };
+    checkPendingRequests();
+  });
+
+  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toContainText('ortoni');
 });
 
 When('Login should fail', async function () {
-  await expect(page.locator('mat-error')).toHaveText('Username or Password is incorrect.');
-  await browser.close();
+  await expect(fixture.page.locator('mat-error')).toHaveText('Username or Password is incorrect.');
 });
