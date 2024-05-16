@@ -13,7 +13,9 @@
     "@cucumber/cucumber": "^10.7.0",
     "@playwright/test": "^1.44.0",
     "@types/node": "^20.12.12",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "winston": "^3.13.0"
   }
 }
