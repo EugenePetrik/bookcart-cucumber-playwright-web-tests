@@ -16,6 +16,7 @@
         "parallel": 2
     },
     "rerun": {
+        "tags": "@test",
         "formatOptions": {
             "snippetInterface": "async-await"
         },
