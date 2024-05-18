@@ -1,10 +1,12 @@
 import { BeforeAll, AfterAll, Before, After, Status } from '@cucumber/cucumber';
 import { type Browser, type BrowserContext, type Page } from '@playwright/test';
 import { join } from 'path';
+import { createLogger } from 'winston';
 import { fixture } from './pageFixture';
 import contextManager from '../helper/context/contextManager';
 import { browserManager } from '../helper/browsers/browserManager';
 import { getEnv } from '../helper/env/env';
+import { options } from '../helper/util/logger';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -15,10 +17,12 @@ BeforeAll(async function () {
   browser = await browserManager();
 });
 
-Before(async function () {
+Before(async function ({ pickle }) {
+  const scenarioName = `${pickle.name} ${pickle.id}`;
   context = await browser.newContext();
   page = await context.newPage();
   fixture.page = page;
+  fixture.logger = createLogger(options(scenarioName));
 });
 
 After(async function ({ pickle, result }) {
@@ -45,4 +49,5 @@ After(async function ({ pickle, result }) {
 
 AfterAll(async function () {
   await browser.close();
+  fixture.logger.close();
 });

@@ -24,6 +24,7 @@ Given('User navigates to the application', async function () {
   });
 
   await fixture.page.goto(baseConfig.BASE_URL);
+  fixture.logger.info('Navigated to the application');
 });
 
 Given('User click on the login link', async function () {
@@ -59,13 +60,15 @@ Then('Login should be success', async function () {
     checkPendingRequests();
   });
 
-  const actualUser = contextManager.get('username') as string;
+  const actualUserName = contextManager.get('username') as string;
+  fixture.logger.info(`Username: ${actualUserName}`);
   await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText(
-    actualUser,
+    actualUserName,
   );
 });
 
 When('Login should fail', async function () {
+  await expect(fixture.page.locator('mat-error')).toBeVisible();
   await expect(fixture.page.locator('mat-error')).toHaveText(
     'Username or Password is incorrect.',
   );

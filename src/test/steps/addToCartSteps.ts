@@ -6,6 +6,7 @@ import baseConfig from '../../config/baseConfig';
 setDefaultTimeout(60 * 1_000 * 2);
 
 Given('User search for a {string}', async function (book: string) {
+  fixture.logger.info(`Searching for a book: ${book}`);
   await fixture.page.locator('input[type="search"]').fill(book);
   // eslint-disable-next-line playwright/no-wait-for-timeout
   await fixture.page.waitForTimeout(2000);
