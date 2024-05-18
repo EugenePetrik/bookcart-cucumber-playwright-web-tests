@@ -1,6 +1,7 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { fixture } from '../../hooks/pageFixture';
+import contextManager from '../../helper/contextManager';
 
 setDefaultTimeout(60 * 1_000 * 2);
 
@@ -29,6 +30,7 @@ Given('User click on the login link', async function () {
 });
 
 Given('User enter the username as {string}', async function (username) {
+  contextManager.set('username', username);
   await fixture.page.getByPlaceholder('Username').fill(username);
 });
 
@@ -50,13 +52,14 @@ Then('Login should be success', async function () {
       if (pendingRequests.size === 0) {
         resolve('success');
       } else {
-        setTimeout(checkPendingRequests, 100);
+        setTimeout(checkPendingRequests, 500);
       }
     };
     checkPendingRequests();
   });
 
-  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toContainText('ortoni');
+  const actualUser = contextManager.get('username');
+  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText(actualUser);
 });
 
 When('Login should fail', async function () {
