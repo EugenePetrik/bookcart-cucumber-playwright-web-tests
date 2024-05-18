@@ -6,7 +6,6 @@ declare global {
       ENV: 'staging' | 'prod' | 'test';
       BASE_URL: string;
       BROWSER_NAME: 'Chrome' | 'Firefox' | 'Safari';
-      HEADLESS: 'true' | 'false';
     }
   }
 }

@@ -15,6 +15,6 @@ const baseConfig: IConfig = {} as IConfig;
 
 baseConfig.BROWSER_NAME = process.env.BROWSER_NAME || 'Chrome';
 baseConfig.BASE_URL = process.env.BASE_URL;
-baseConfig.HEADLESS = process.env.HEADLESS === 'true';
+baseConfig.HEADLESS = !!process.env.CI;
 
 export default baseConfig;
