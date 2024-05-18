@@ -1,5 +1,5 @@
-import { Page } from '@playwright/test';
-import { Logger } from 'winston';
+import { type Page } from '@playwright/test';
+import { type Logger } from 'winston';
 
 export const fixture = {
   page: undefined as Page,

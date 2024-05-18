@@ -5,7 +5,7 @@ Feature: Add products to cart
     And User click on the login link
 
   @add
-  Scenario Outline: Authenticated Users - Add to cart
+  Scenario Outline: Authenticated user <username> - add to cart
     When User enter the username as "<username>"
     And User enter the password as "<password>"
     And User click on the login button
@@ -15,12 +15,12 @@ Feature: Add products to cart
     Then The cart badge should get updated
 
     Examples:
-      | username | password  | book            |
-      | ortoni11 | Pass1234  | Roomies         |
-      | ortonikc | pass1234  | The Simple Wild |
+      | username         | password   | book            |
+      | user_name_first  | Qwerty123  | Roomies         |
+      | user_name_second | Qwerty123  | The Simple Wild |
 
   @fail
-  Scenario: UnAuthenticated User - Add to cart
+  Scenario: Unauthenticated user - add to cart
     When User search for a "All of Us with Wings"
     And User add the book to the cart
     Then The cart badge should get updated
