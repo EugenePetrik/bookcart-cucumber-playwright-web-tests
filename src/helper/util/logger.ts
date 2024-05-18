@@ -9,7 +9,7 @@ export function options(scenarioName: string) {
           process.cwd(),
           'test-results',
           'logs',
-          `${scenarioName.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}/log.log`,
+          `${scenarioName.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}.log`,
         ),
         level: 'info',
         format: format.combine(

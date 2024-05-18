@@ -2,7 +2,6 @@ import { BeforeAll, AfterAll, Before, After, Status } from '@cucumber/cucumber';
 import { type Browser, type BrowserContext, type Page } from '@playwright/test';
 import { join } from 'path';
 import { createLogger } from 'winston';
-import { readFileSync } from 'fs-extra';
 import { fixture } from './pageFixture';
 import contextManager from '../helper/context/contextManager';
 import { browserManager } from '../helper/browsers/browserManager';
@@ -67,7 +66,7 @@ After(async function ({ pickle, result }) {
   await context.close();
   contextManager.clear();
 
-  if (result.status === Status.PASSED) {
+  if (result.status !== Status.PASSED) {
     this.attach(image, 'image/png');
     // this.attach(readFileSync(videoPath), 'video/webm');
     this.attach(`Trace file: ${traceFileLink}`, 'text/html');
