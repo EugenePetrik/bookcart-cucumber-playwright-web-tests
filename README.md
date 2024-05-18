@@ -47,9 +47,11 @@ npm t
 ### Run a particular test
 
 ```json
-paths: [
-    "src/test/features/your_feature_name.feature"
-]
+{
+    "paths": [
+        "src/test/features/your_feature_name.feature"
+    ]
+}
 ```
 
 ### Use tags to run a specific or collection of specs
