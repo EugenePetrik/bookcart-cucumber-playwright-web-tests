@@ -1,14 +1,17 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
 import { fixture } from '../../hooks/pageFixture';
 import contextManager from '../../helper/context/contextManager';
-import baseConfig from '../../config/baseConfig';
+import { Application } from '../../app';
 
 setDefaultTimeout(60 * 1_000 * 2);
+
+let app: Application;
 
 const pendingRequests = new Set();
 
 Given('User navigates to the application', async function () {
+  app = new Application(fixture.page);
+
   fixture.page.on('request', request => {
     if (request.resourceType() === 'xhr' || request.resourceType() === 'fetch') {
       pendingRequests.add(request);
@@ -23,29 +26,25 @@ Given('User navigates to the application', async function () {
     pendingRequests.delete(request);
   });
 
-  await fixture.page.goto(baseConfig.BASE_URL);
+  await app.home.open();
   fixture.logger.info('Navigated to the application');
 });
 
 Given('User click on the login link', async function () {
-  await fixture.page.getByRole('button', { name: 'Login' }).click();
+  await app.home.header.clickLoginLink();
 });
 
 Given('User enter the username as {string}', async function (username: string) {
   contextManager.set('username', username);
-  await fixture.page.getByPlaceholder('Username').fill(username);
+  await app.login.enterUserName(username);
 });
 
 Given('User enter the password as {string}', async function (password: string) {
-  await fixture.page.getByPlaceholder('Password').fill(password);
+  await app.login.enterPassword(password);
 });
 
 When('User click on the login button', async function () {
-  const responsePromise = fixture.page.waitForResponse(`${baseConfig.BASE_URL}/**`);
-
-  await fixture.page.locator('mat-card').getByRole('button', { name: 'Login' }).click();
-
-  await responsePromise;
+  await app.login.clickLoginButton();
 });
 
 Then('Login should be success', async function () {
@@ -60,16 +59,11 @@ Then('Login should be success', async function () {
     checkPendingRequests();
   });
 
-  const actualUserName = contextManager.get('username') as string;
-  fixture.logger.info(`Username: ${actualUserName}`);
-  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText(
-    actualUserName,
-  );
+  const username = contextManager.get('username') as string;
+  fixture.logger.info(`Username: ${username}`);
+  await app.home.header.expectLoginSuccess(username);
 });
 
 When('Login should fail', async function () {
-  await expect(fixture.page.locator('mat-error')).toBeVisible();
-  await expect(fixture.page.locator('mat-error')).toHaveText(
-    'Username or Password is incorrect.',
-  );
+  await app.login.expectErrorMessage('Username or Password is incorrect.');
 });
