@@ -1,7 +1,8 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { fixture } from '../../hooks/pageFixture';
-import contextManager from '../../helper/contextManager';
+import contextManager from '../../helper/context/contextManager';
+import baseConfig from '../../config/baseConfig';
 
 setDefaultTimeout(60 * 1_000 * 2);
 
@@ -22,7 +23,7 @@ Given('User navigates to the application', async function () {
     pendingRequests.delete(request);
   });
 
-  await fixture.page.goto('https://bookcart.azurewebsites.net/');
+  await fixture.page.goto(baseConfig.BASE_URL);
 });
 
 Given('User click on the login link', async function () {
@@ -39,7 +40,7 @@ Given('User enter the password as {string}', async function (password) {
 });
 
 When('User click on the login button', async function () {
-  const responsePromise = fixture.page.waitForResponse('https://bookcart.azurewebsites.net/**');
+  const responsePromise = fixture.page.waitForResponse(`${baseConfig.BASE_URL}/**`);
 
   await fixture.page.locator('mat-card').getByRole('button', { name: 'Login' }).click();
 

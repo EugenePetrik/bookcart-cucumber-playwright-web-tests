@@ -1,21 +1,23 @@
 const report = require('multiple-cucumber-html-reporter');
-const os = require('os');
+import { hostname, type, platform, release } from 'os';
+import { join } from 'path';
+import baseConfig from '../../config/baseConfig';
 
 report.generate({
-  jsonDir: 'test-results',
-  reportPath: 'test-results/reports/',
+  jsonDir: join(process.cwd(), 'test-results'),
+  reportPath: join(process.cwd(), 'test-results', 'reports'),
   reportName: 'Playwright Automation Report',
   pageTitle: 'BookCart App Test Report',
   displayDuration: false,
   metadata: {
     browser: {
-      name: 'Chrome',
+      name: baseConfig.BROWSER_NAME,
       version: 'Latest',
     },
-    device: `${os.hostname()} - ${os.type()}`,
+    device: `${hostname()} - ${type()}`,
     platform: {
-      name: os.platform(),
-      version: os.release(),
+      name: platform(),
+      version: release(),
     },
   },
   customData: {
