@@ -48,9 +48,7 @@ npm t
 
 ```json
 {
-    "paths": [
-        "src/test/features/your_feature_name.feature"
-    ]
+  "paths": ["src/test/features/your_feature_name.feature"]
 }
 ```
 
