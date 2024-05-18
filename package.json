@@ -9,7 +9,7 @@
         "check-lint": "eslint . --ext ts",
         "check-all": "npm run check-format && npm run check-lint",
         "postinstall": "npx playwright install",
-        "test": "cross-env ENV=prod cucumber-js test || true",
+        "test": "cross-env ENV=prod FORCE_COLOR=0 cucumber-js --config=src/config/cucumber.js || true",
         "pretest": "npx ts-node src/helper/report/init.ts",
         "posttest": "npx ts-node src/helper/report/report.ts",
         "test:failed": "cucumber-js -p rerun @rerun.txt"

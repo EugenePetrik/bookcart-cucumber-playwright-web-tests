@@ -5,7 +5,6 @@ module.exports = {
       snippetInterface: 'async-await',
     },
     paths: ['src/test/features'],
-    publishQuiet: true,
     dryRun: false,
     require: ['src/test/steps/*.ts', 'src/hooks/hooks.ts'],
     requireModule: ['ts-node/register'],
@@ -21,7 +20,6 @@ module.exports = {
     formatOptions: {
       snippetInterface: 'async-await',
     },
-    publishQuiet: true,
     dryRun: false,
     require: ['src/test/steps/*.ts', 'src/hooks/hooks.ts'],
     requireModule: ['ts-node/register'],

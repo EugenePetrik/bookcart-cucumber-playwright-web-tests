@@ -9,6 +9,7 @@ interface IConfig {
   BROWSER_NAME: string;
   BASE_URL: string;
   HEADLESS: boolean;
+  TAGS: string;
 }
 
 const baseConfig: IConfig = {} as IConfig;
@@ -16,5 +17,6 @@ const baseConfig: IConfig = {} as IConfig;
 baseConfig.BROWSER_NAME = process.env.BROWSER_NAME || 'Chrome';
 baseConfig.BASE_URL = process.env.BASE_URL;
 baseConfig.HEADLESS = !!process.env.CI;
+baseConfig.TAGS = process.env.TAGS || '@regression';
 
 export default baseConfig;
