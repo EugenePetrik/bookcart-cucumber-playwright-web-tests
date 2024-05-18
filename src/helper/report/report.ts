@@ -1,8 +1,11 @@
-const report = require('multiple-cucumber-html-reporter');
 import { hostname, type, platform, release } from 'os';
 import { join } from 'path';
 import baseConfig from '../../config/baseConfig';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+const report = require('multiple-cucumber-html-reporter');
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 report.generate({
   jsonDir: join(process.cwd(), 'test-results'),
   reportPath: join(process.cwd(), 'test-results', 'reports'),

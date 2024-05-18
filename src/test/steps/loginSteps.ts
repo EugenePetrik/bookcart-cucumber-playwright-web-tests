@@ -30,12 +30,12 @@ Given('User click on the login link', async function () {
   await fixture.page.getByRole('button', { name: 'Login' }).click();
 });
 
-Given('User enter the username as {string}', async function (username) {
+Given('User enter the username as {string}', async function (username: string) {
   contextManager.set('username', username);
   await fixture.page.getByPlaceholder('Username').fill(username);
 });
 
-Given('User enter the password as {string}', async function (password) {
+Given('User enter the password as {string}', async function (password: string) {
   await fixture.page.getByPlaceholder('Password').fill(password);
 });
 
@@ -59,10 +59,14 @@ Then('Login should be success', async function () {
     checkPendingRequests();
   });
 
-  const actualUser = contextManager.get('username');
-  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText(actualUser);
+  const actualUser = contextManager.get('username') as string;
+  await expect(fixture.page.locator('mat-toolbar .mdc-button__label').nth(1)).toHaveText(
+    actualUser,
+  );
 });
 
 When('Login should fail', async function () {
-  await expect(fixture.page.locator('mat-error')).toHaveText('Username or Password is incorrect.');
+  await expect(fixture.page.locator('mat-error')).toHaveText(
+    'Username or Password is incorrect.',
+  );
 });

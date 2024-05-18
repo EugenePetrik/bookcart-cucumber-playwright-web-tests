@@ -19,4 +19,4 @@ export const browserManager = () => {
     default:
       throw new Error('Please set the proper browser!');
   }
-}
+};

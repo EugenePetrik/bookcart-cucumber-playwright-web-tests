@@ -1,6 +1,8 @@
 class ContextManager {
+  // eslint-disable-next-line no-use-before-define
   private static instance: ContextManager;
-  private state: { [key: string]: any };
+
+  private state: { [key: string]: unknown };
 
   private constructor() {
     this.state = {};
@@ -13,11 +15,11 @@ class ContextManager {
     return ContextManager.instance;
   }
 
-  public set(key: string, value: any): void {
+  public set(key: string, value: unknown): void {
     this.state[key] = value;
   }
 
-  public get(key: string): any {
+  public get(key: string): unknown {
     return this.state[key];
   }
 

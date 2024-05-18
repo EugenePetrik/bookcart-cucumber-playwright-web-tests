@@ -3,6 +3,7 @@
 Web UI automated tests of [BookCart](https://bookcart.azurewebsites.net) site with Playwright and Cucumber.
 
 ### Technologies
+
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Node.js](https://nodejs.org/en/)
 - [TypeScript](https://www.typescriptlang.org/)

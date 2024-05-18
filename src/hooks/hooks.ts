@@ -23,14 +23,19 @@ Before(async function () {
 
 After(async function ({ pickle, result }) {
   if (result.status !== Status.PASSED) {
-    const screenshotsPath = join(process.cwd(), 'test-results', 'screenshots', `${pickle.name.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}.png`);
+    const screenshotsPath = join(
+      process.cwd(),
+      'test-results',
+      'screenshots',
+      `${pickle.name.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}.png`,
+    );
 
     const image = await fixture.page.screenshot({
       path: screenshotsPath,
       type: 'png',
     });
 
-    await this.attach(image, 'image/png');
+    this.attach(image, 'image/png');
   }
 
   await fixture.page.close();

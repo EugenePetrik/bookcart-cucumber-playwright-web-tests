@@ -1,12 +1,14 @@
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
 
-dotenvConfig({ path: join(process.cwd(), 'src', 'helper', 'env', `.env.${process.env.ENV}`) });
+dotenvConfig({
+  path: join(process.cwd(), 'src', 'helper', 'env', `.env.${process.env.ENV}`),
+});
 
 interface IConfig {
-  BROWSER_NAME: string,
-  BASE_URL: string,
-  HEADLESS: boolean,
+  BROWSER_NAME: string;
+  BASE_URL: string;
+  HEADLESS: boolean;
 }
 
 const baseConfig: IConfig = {} as IConfig;
