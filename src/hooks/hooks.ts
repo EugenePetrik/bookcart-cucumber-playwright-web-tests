@@ -20,9 +20,9 @@ Before(async function ({ pickle }) {
   const scenarioName = `${pickle.name} ${pickle.id}`;
 
   context = await browser.newContext({
-    recordVideo: {
-      dir: join(process.cwd(), 'test-results', 'videos'),
-    },
+    // recordVideo: {
+    //   dir: join(process.cwd(), 'test-results', 'videos'),
+    // },
   });
 
   await context.tracing.start({
