@@ -1,20 +1,22 @@
-import { Given, When, Then } from '@cucumber/cucumber';
+import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { fixture } from '../../hooks/pageFixture';
 import baseConfig from '../../config/baseConfig';
-import { type RegisterUser } from '../../helper/types/user';
+import { type IRegisterUser } from '../../helper/types/user';
 import { Application } from '../../app';
+
+setDefaultTimeout(60 * 1_000 * 2);
 
 let app: Application;
 
 Given('I navigate to the register page', async function () {
   app = new Application(fixture.page);
-  await app.register.open();
+  await app.registerPage.open();
 });
 
 When('I create a new user', async function () {
-  const user: RegisterUser = {
+  const user: IRegisterUser = {
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     userName: `username_${Date.now().toString()}`,
@@ -23,7 +25,7 @@ When('I create a new user', async function () {
     gender: 'Male',
   };
 
-  await app.register.registerUser(user);
+  await app.registerPage.registerUser(user);
 });
 
 Then('Registration should be success', async function () {

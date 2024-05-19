@@ -3,7 +3,7 @@ import { AppPage } from '../abstract.classes';
 import baseConfig from '../../config/baseConfig';
 
 export class LoginPage extends AppPage {
-  public readonly pagePath: string = '/login';
+  public readonly pagePath = '/login';
 
   private readonly userNameInput = this.page.getByPlaceholder('Username');
 
@@ -23,27 +23,27 @@ export class LoginPage extends AppPage {
     ]);
   }
 
-  async enterUserName(username: string) {
-    await this.userNameInput.fill(username);
+  async enterUsername(text: string): Promise<void> {
+    await this.userNameInput.fill(text);
   }
 
-  async enterPassword(password: string) {
-    await this.passwordInput.fill(password);
+  async enterPassword(text: string): Promise<void> {
+    await this.passwordInput.fill(text);
   }
 
-  async clickLoginButton() {
-    const responsePromise = this.page.waitForResponse(`${baseConfig.BASE_URL}/**`);
+  async clickLoginButton(): Promise<void> {
+    const responsePromise = this.page.waitForResponse(`${baseConfig.BASE_URL}/api/login`);
     await this.loginButton.click();
     await responsePromise;
   }
 
-  async expectErrorMessage(message: string) {
+  async expectErrorMessage(text: string): Promise<void> {
     await expect(this.errorMessage).toBeVisible();
-    await expect(this.errorMessage).toHaveText(message);
+    await expect(this.errorMessage).toHaveText(text);
   }
 
-  async loginUser(user: string, password: string) {
-    await this.enterUserName(user);
+  async loginUser(username: string, password: string): Promise<void> {
+    await this.enterUsername(username);
     await this.enterPassword(password);
     await this.clickLoginButton();
   }

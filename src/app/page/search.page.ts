@@ -3,10 +3,10 @@ import { AppPage } from '../abstract.classes';
 import { Header } from '../component/header.component';
 import baseConfig from '../../config/baseConfig';
 
-export class BooksPage extends AppPage {
-  public readonly pagePath: string = '/';
+export class SearchPage extends AppPage {
+  public readonly pagePath = '/';
 
-  public readonly header: Header = new Header(this.page);
+  public readonly header = new Header(this.page);
 
   private readonly categories = this.page.locator('app-book-filter a');
 
@@ -22,14 +22,16 @@ export class BooksPage extends AppPage {
     await Promise.all([await expect(this.addToCartButton).toBeVisible()]);
   }
 
-  async verifyAllCategories(categories: string[]) {
+  async verifyAllCategories(categories: string[]): Promise<void> {
     await expect(this.categories).toHaveText(categories);
   }
 
-  async addBookToCart(bookName: string) {
-    await expect(this.bookTitle).toHaveText(bookName, { ignoreCase: true });
+  async addBookToCart(name: string): Promise<void> {
+    await expect(this.bookTitle).toHaveText(name, { ignoreCase: true });
 
-    const responsePromise = this.page.waitForResponse(`${baseConfig.BASE_URL}/**`);
+    const responsePromise = this.page.waitForResponse(
+      `${baseConfig.BASE_URL}/api/shoppingcart/addToCart/**`,
+    );
     await this.addToCartButton.click();
     await responsePromise;
 

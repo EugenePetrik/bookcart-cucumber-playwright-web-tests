@@ -1,12 +1,15 @@
+import { expect } from '@playwright/test';
 import { AppPage } from '../abstract.classes';
 import { Header } from '../component/header.component';
 
 export class HomePage extends AppPage {
-  public readonly pagePath: string = '/';
+  public readonly pagePath = '/';
 
-  public readonly header: Header = new Header(this.page);
+  public readonly header = new Header(this.page);
+
+  private readonly bookCard = this.page.locator('mat-card.book-card');
 
   async expectLoaded(): Promise<void> {
-    await this.header.expectLoaded();
+    await expect(this.bookCard).not.toHaveCount(0);
   }
 }

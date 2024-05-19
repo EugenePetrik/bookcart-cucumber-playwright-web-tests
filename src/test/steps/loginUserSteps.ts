@@ -2,6 +2,8 @@ import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { fixture } from '../../hooks/pageFixture';
 import contextManager from '../../helper/context/contextManager';
 import { Application } from '../../app';
+import { getUser } from '../../helper/util/getUser';
+import { IUsersConfig } from '../../test_data/users';
 
 setDefaultTimeout(60 * 1_000 * 2);
 
@@ -26,25 +28,34 @@ Given('User navigates to the application', async function () {
     pendingRequests.delete(request);
   });
 
-  await app.home.open();
-  fixture.logger.info('Navigated to the application');
+  await app.homePage.open();
+  fixture.logger.info('Navigates to the application');
 });
 
-Given('User click on the login link', async function () {
-  await app.home.header.clickLoginLink();
+Given('User clicks on the login link', async function () {
+  await app.homePage.header.clickLoginLink();
 });
 
-Given('User enter the username as {string}', async function (username: string) {
+When('User enters the username as {string}', async function (username: string) {
   contextManager.set('username', username);
-  await app.login.enterUserName(username);
+  await app.loginPage.enterUsername(username);
 });
 
-Given('User enter the password as {string}', async function (password: string) {
-  await app.login.enterPassword(password);
+When('User enters the password as {string}', async function (password: string) {
+  await app.loginPage.enterPassword(password);
 });
 
-When('User click on the login button', async function () {
-  await app.login.clickLoginButton();
+When('User clicks on the login button', async function () {
+  await app.loginPage.clickLoginButton();
+});
+
+When('User logs in as {string}', async function (user: keyof IUsersConfig) {
+  const [username, password] = getUser(user);
+
+  fixture.logger.info(`Username: ${username}`);
+  fixture.logger.info(`Password: ${password}`);
+
+  await app.loginPage.loginUser(username, password);
 });
 
 Then('Login should be success', async function () {
@@ -61,9 +72,9 @@ Then('Login should be success', async function () {
 
   const username = contextManager.get('username') as string;
   fixture.logger.info(`Username: ${username}`);
-  await app.home.header.expectLoginSuccess(username);
+  await app.homePage.header.expectLoginSuccess(username);
 });
 
 When('Login should fail', async function () {
-  await app.login.expectErrorMessage('Username or Password is incorrect.');
+  await app.loginPage.expectErrorMessage('Username or Password is incorrect.');
 });

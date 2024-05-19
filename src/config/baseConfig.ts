@@ -5,14 +5,14 @@ dotenvConfig({
   path: join(process.cwd(), 'src', 'helper', 'env', `.env.${process.env.ENV}`),
 });
 
-interface IConfig {
+interface IBaseConfig {
   BROWSER_NAME: string;
   BASE_URL: string;
   HEADLESS: boolean;
   TAGS: string;
 }
 
-const baseConfig: IConfig = {} as IConfig;
+const baseConfig = {} as IBaseConfig;
 
 baseConfig.BROWSER_NAME = process.env.BROWSER_NAME || 'Chrome';
 baseConfig.BASE_URL = process.env.BASE_URL;

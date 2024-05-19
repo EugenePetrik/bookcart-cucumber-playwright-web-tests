@@ -1,6 +1,6 @@
 module.exports = {
   default: {
-    tags: process.env.TAGS || '',
+    tags: process.env.TAGS || '@regression',
     formatOptions: {
       snippetInterface: 'async-await',
     },

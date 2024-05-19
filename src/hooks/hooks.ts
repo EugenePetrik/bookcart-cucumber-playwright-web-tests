@@ -1,5 +1,5 @@
 import { BeforeAll, AfterAll, Before, After, Status } from '@cucumber/cucumber';
-import { type Browser, type BrowserContext, type Page } from '@playwright/test';
+import { type Browser, type BrowserContext } from '@playwright/test';
 import { join } from 'path';
 import { createLogger } from 'winston';
 import { fixture } from './pageFixture';
@@ -39,12 +39,12 @@ Before(async function ({ pickle }) {
 });
 
 After(async function ({ pickle, result }) {
-  const screenshotsPath = join(
-    process.cwd(),
-    'test-results',
-    'screenshots',
-    `${pickle.name.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}.png`,
-  );
+  // const screenshotsPath = join(
+  //   process.cwd(),
+  //   'test-results',
+  //   'screenshots',
+  //   `${pickle.name.toLowerCase().replaceAll(/[-,]/g, '').split(' ').join('_')}.png`,
+  // );
 
   // const videoPath = await fixture.page.video().path();
 
@@ -56,10 +56,10 @@ After(async function ({ pickle, result }) {
   );
   const traceFileLink = `<a href="https://trace.playwright.dev/" target="_blank">Open ${tracePath}</a>`;
 
-  const image: Buffer = await fixture.page.screenshot({
-    path: screenshotsPath,
-    type: 'png',
-  });
+  // const image: Buffer = await fixture.page.screenshot({
+  //   path: screenshotsPath,
+  //   type: 'png',
+  // });
 
   await context.tracing.stop({ path: tracePath });
   await fixture.page.close();
@@ -67,7 +67,7 @@ After(async function ({ pickle, result }) {
   contextManager.clear();
 
   if (result.status !== Status.PASSED) {
-    this.attach(image, 'image/png');
+    // this.attach(image, 'image/png');
     // this.attach(readFileSync(videoPath), 'video/webm');
     this.attach(`Trace file: ${traceFileLink}`, 'text/html');
   }

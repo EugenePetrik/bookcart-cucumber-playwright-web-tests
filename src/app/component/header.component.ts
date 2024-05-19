@@ -1,18 +1,24 @@
-import { expect } from '@playwright/test';
+import { Locator, expect } from '@playwright/test';
 import { Component } from '../abstract.classes';
 
 export class Header extends Component {
   private readonly searchInput = this.page.getByPlaceholder('Search books or authors');
 
+  private readonly searchOption = this.page.locator(
+    'mat-option .mdc-list-item__primary-text',
+  );
+
   private readonly cartButton = this.page.locator(
-    'button[ng-reflect-router-link="/shopping-cart"]',
+    '[ng-reflect-router-link="/shopping-cart"]',
   );
 
   private readonly cartValue = this.page.locator('[id^=mat-badge-content]').last();
 
   private readonly userMenu = this.page.locator('mat-toolbar .mdc-button__label').nth(1);
 
-  private readonly loginLink = this.page.getByRole('button', { name: 'Login' });
+  private readonly loginLink = this.page
+    .locator('mat-toolbar-row')
+    .getByRole('button', { name: 'Login' });
 
   async expectLoaded(): Promise<void> {
     await Promise.all([
@@ -21,31 +27,30 @@ export class Header extends Component {
     ]);
   }
 
-  async selectBook(name: string) {
+  async selectBook(name: string): Promise<void> {
     await this.searchInput.fill(name);
-    // eslint-disable-next-line playwright/no-wait-for-timeout
-    await this.page.waitForTimeout(2000);
-    await this.page.locator('mat-option .mdc-list-item__primary-text').click();
+    await this.searchOption.getByText(name).click();
+    await expect(this.page).toHaveURL(/\/search\?item=/);
   }
 
-  async clickOnCart() {
+  async clickOnCart(): Promise<void> {
     await this.cartButton.click();
   }
 
-  async expectCartValueUpdated() {
+  async expectCartValueUpdated(): Promise<void> {
     const badgeCount = await this.cartValue.innerText();
     expect(Number(badgeCount)).toBeGreaterThan(0);
   }
 
-  async clickOnUserMenu() {
+  async clickOnUserMenu(): Promise<void> {
     await this.userMenu.click();
   }
 
-  async expectLoginSuccess(username: string) {
+  async expectLoginSuccess(username: string): Promise<void> {
     await expect(this.userMenu).toHaveText(username);
   }
 
-  async clickLoginLink() {
+  async clickLoginLink(): Promise<void> {
     await this.loginLink.click();
   }
 }

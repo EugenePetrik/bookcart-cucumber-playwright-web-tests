@@ -1,3 +1,4 @@
+@regression
 Feature: Register user
 
 Scenario: Register a new user

@@ -1,10 +1,10 @@
 import { expect } from '@playwright/test';
 import baseConfig from '../../config/baseConfig';
 import { AppPage } from '../abstract.classes';
-import { RegisterUser } from '../../helper/types/user';
+import { type IRegisterUser } from '../../helper/types/user';
 
 export class RegisterPage extends AppPage {
-  public readonly pagePath: string = '/register';
+  public readonly pagePath = '/register';
 
   private readonly firstNameInput = this.page.getByPlaceholder('First name');
 
@@ -37,13 +37,12 @@ export class RegisterPage extends AppPage {
     ]);
   }
 
-  async registerUser(user: RegisterUser) {
+  async registerUser(user: IRegisterUser): Promise<void> {
     const { firstName, lastName, userName, password, confirmPassword, gender } = user;
 
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
 
-    // This must be unique always
     await this.enterUsername(userName);
 
     await this.passwordInput.fill(password);
@@ -60,14 +59,14 @@ export class RegisterPage extends AppPage {
     await this.registerButton.click();
   }
 
-  private async enterUsername(username: string) {
-    await this.userNameInput.fill(username);
+  private async enterUsername(text: string): Promise<void> {
+    await this.userNameInput.fill(text);
 
     const [response] = await Promise.all([
       this.page.waitForResponse(res => {
         return (
           res.status() === 200 &&
-          res.url() === `${baseConfig.BASE_URL}/api/user/validateUserName/${username}`
+          res.url() === `${baseConfig.BASE_URL}/api/user/validateUserName/${text}`
         );
       }),
     ]);
