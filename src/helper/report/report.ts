@@ -2,7 +2,7 @@ import { hostname, type, platform, release } from 'os';
 import { join } from 'path';
 import baseConfig from '../../config/baseConfig';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
 const report = require('multiple-cucumber-html-reporter');
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
